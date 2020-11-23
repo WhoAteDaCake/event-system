@@ -9,6 +9,7 @@ export interface Environment {
   POSTGRES_SCHEMA: string;
   POOL_SIZE: number;
   PORT: number;
+  SECRET: string;
 }
 // Make sure that it's validated before access
 export let env = (process.env as any) as Environment;
@@ -19,9 +20,12 @@ const envSchema = yup
     // postgresql://user:password@localhost:5432/db
     POSTGRES_URL: yup.string().required(),
     POSTGRES_SCHEMA: yup.string().required(),
-    // 
+    // Required for security purposes
     PORT: yup.number().required(),
+    // Pool for postgreSQL connections
     POOL_SIZE: yup.number().required(),
+    // Used for memory sessions
+    SECRET: yup.string().required(),
   })
   .required();
 
@@ -34,7 +38,6 @@ export function validateEnv() {
       msg: 'Invalid environment variables',
       path: e.path,
       errors: e.errors,
-    }
+    };
   }
 }
-
